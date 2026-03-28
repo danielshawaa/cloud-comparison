@@ -1,23 +1,30 @@
 import type { ServicesResponse, CategoriesResponse } from '../types'
-
-const BASE_URL = 'http://localhost:8000/api'
+import { AWS_SERVICES, CATEGORIES } from '../data/awsServices'
 
 export async function fetchServices(
   category?: string,
   search?: string,
 ): Promise<ServicesResponse> {
-  const params = new URLSearchParams()
-  if (category) params.append('category', category)
-  if (search) params.append('search', search)
+  let results = AWS_SERVICES
 
-  const url = `${BASE_URL}/services${params.toString() ? `?${params}` : ''}`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Failed to fetch services: ${res.statusText}`)
-  return res.json() as Promise<ServicesResponse>
+  if (category) {
+    results = results.filter(s => s.category.toLowerCase() === category.toLowerCase())
+  }
+
+  if (search) {
+    const q = search.toLowerCase()
+    results = results.filter(
+      s =>
+        s.name.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q) ||
+        s.keyFeatures.some(f => f.toLowerCase().includes(q)) ||
+        s.useCase.toLowerCase().includes(q),
+    )
+  }
+
+  return { services: results, total: results.length }
 }
 
 export async function fetchCategories(): Promise<CategoriesResponse> {
-  const res = await fetch(`${BASE_URL}/categories`)
-  if (!res.ok) throw new Error(`Failed to fetch categories: ${res.statusText}`)
-  return res.json() as Promise<CategoriesResponse>
+  return { categories: CATEGORIES }
 }

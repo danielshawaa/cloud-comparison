@@ -6,6 +6,10 @@ import SearchBar from './components/SearchBar'
 import CategoryFilter from './components/CategoryFilter'
 import ServiceCard from './components/ServiceCard'
 import LoadingSpinner from './components/LoadingSpinner'
+import ComparisonBar from './components/ComparisonBar'
+import ComparisonModal from './components/ComparisonModal'
+
+const MAX_COMPARE = 3
 
 function App() {
   const [services, setServices] = useState<AWSService[]>([])
@@ -16,6 +20,18 @@ function App() {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [compareList, setCompareList] = useState<AWSService[]>([])
+  const [showModal, setShowModal] = useState(false)
+
+  const toggleCompare = useCallback((service: AWSService) => {
+    setCompareList(prev => {
+      if (prev.some(s => s.id === service.id)) {
+        return prev.filter(s => s.id !== service.id)
+      }
+      if (prev.length >= MAX_COMPARE) return prev
+      return [...prev, service]
+    })
+  }, [])
 
   // Debounce the search input by 300ms
   useEffect(() => {
@@ -42,7 +58,7 @@ function App() {
       setServices(data.services)
       setTotal(data.total)
     } catch {
-      setError('Could not reach the backend. Make sure it is running on http://localhost:8000.')
+      setError('Failed to load services. Please refresh the page.')
     } finally {
       setLoading(false)
     }
@@ -57,11 +73,17 @@ function App() {
 
   const hasFilters = selectedCategory !== '' || searchQuery !== ''
 
+  const clearCompare = () => setCompareList([])
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {showModal && (
+        <ComparisonModal services={compareList} onClose={() => setShowModal(false)} />
+      )}
+
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-28">
         {/* Search + clear */}
         <div className="flex items-center gap-3 mb-5">
           <div className="flex-1">
@@ -109,11 +131,24 @@ function App() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {services.map(service => (
-              <ServiceCard key={service.id} service={service} />
+              <ServiceCard
+                key={service.id}
+                service={service}
+                isCompared={compareList.some(s => s.id === service.id)}
+                compareDisabled={compareList.length >= MAX_COMPARE && !compareList.some(s => s.id === service.id)}
+                onCompare={toggleCompare}
+              />
             ))}
           </div>
         )}
       </main>
+
+      <ComparisonBar
+        services={compareList}
+        onRemove={id => setCompareList(prev => prev.filter(s => s.id !== id))}
+        onClear={clearCompare}
+        onCompare={() => setShowModal(true)}
+      />
     </div>
   )
 }

@@ -3,13 +3,23 @@ import { getCategoryColor, getPricingBadgeStyle } from '../utils/styles'
 
 interface ServiceCardProps {
   service: AWSService
+  isCompared?: boolean
+  compareDisabled?: boolean
+  onCompare?: (service: AWSService) => void
 }
 
-export default function ServiceCard({ service }: ServiceCardProps) {
+export default function ServiceCard({
+  service,
+  isCompared = false,
+  compareDisabled = false,
+  onCompare,
+}: ServiceCardProps) {
   const MAX_FEATURES = 4
 
   return (
-    <article className="flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+    <article className={`flex flex-col bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden ${
+      isCompared ? 'border-aws-orange ring-2 ring-aws-orange/20' : 'border-gray-100'
+    }`}>
       {/* Card body */}
       <div className="flex-1 p-5">
         {/* Top row: name + pricing badge */}
@@ -80,6 +90,25 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         </h3>
         <p className="text-xs text-gray-600 leading-relaxed">{service.pricingNotes}</p>
       </div>
+
+      {/* Compare toggle */}
+      {onCompare && (
+        <div className="border-t border-gray-100 px-5 py-2.5 flex justify-end">
+          <button
+            onClick={() => onCompare(service)}
+            disabled={compareDisabled}
+            className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
+              isCompared
+                ? 'bg-aws-orange text-white hover:bg-aws-orange-dark'
+                : compareDisabled
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {isCompared ? '✓ Added to Compare' : '+ Compare'}
+          </button>
+        </div>
+      )}
     </article>
   )
 }

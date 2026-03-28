@@ -75,6 +75,26 @@ npm run dev
 - **Live search** — debounced, searches name, description, features, and use cases
 - **Service cards** — category badge, pricing model badge, key features, use cases, and pricing notes
 - **Responsive grid** — 1 / 2 / 3 columns depending on screen width
+- **Side-by-side comparison** — select up to 3 services via the **+ Compare** button on each card; a sticky bar appears at the bottom and opens a full comparison table
+
+## Deployment (GitHub Pages)
+
+The frontend is a fully static app — no backend required at runtime.
+
+### Automatic (GitHub Actions)
+
+1. Push the repository to GitHub.
+2. Go to **Settings → Pages** and set the source to **GitHub Actions**.
+3. Push any commit to `master` or `main` — the workflow in `.github/workflows/deploy.yml` will build and deploy automatically.
+4. Your site will be live at `https://<your-username>.github.io/<repo-name>/`.
+
+### Manual
+
+```bash
+cd frontend
+VITE_BASE_PATH=/<repo-name>/ npm run build
+# Upload the contents of frontend/dist/ to any static host
+```
 
 ---
 
