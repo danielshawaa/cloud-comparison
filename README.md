@@ -1,101 +1,82 @@
-# AWS Service Comparison
+AWS Service Comparison
 
-A full-stack web app for browsing and comparing AWS services by category, key features, and pricing.
+Live Demo:
+https://danielshawaa.github.io/cloud-comparison/
 
-## Stack
+Overview
 
-| Layer    | Tech                          |
-|----------|-------------------------------|
-| Frontend | React 18 + TypeScript + Vite  |
-| Styling  | Tailwind CSS                  |
-| Backend  | Python + FastAPI + Uvicorn    |
+This project is a web application that helps users explore and compare AWS services across different categories such as compute, storage, databases, AI/ML, and networking.
 
-## Project Structure
+The goal of the project was to build a simple interface where users can search, filter, and compare cloud services side-by-side to better understand their use cases and pricing models.
 
-```
-cloud-service-comparison/
-├── backend/
-│   ├── main.py               # FastAPI app (3 endpoints)
-│   ├── requirements.txt
-│   └── data/
-│       └── aws_services.py   # 33 services across 8 categories
-└── frontend/
-    ├── index.html
-    ├── package.json
-    ├── vite.config.ts
-    ├── tailwind.config.js
-    └── src/
-        ├── App.tsx
-        ├── api/services.ts   # Fetch helpers
-        ├── types/index.ts    # AWSService interface
-        ├── utils/styles.ts   # Category colour helpers
-        └── components/
-            ├── Header.tsx
-            ├── SearchBar.tsx
-            ├── CategoryFilter.tsx
-            ├── ServiceCard.tsx
-            └── LoadingSpinner.tsx
-```
+This project was built as part of my learning process while studying cloud architecture and AWS services.
 
-## Setup & Running
+I used modern web tools along with AI-assisted development tools (Warp AI) to help generate and iterate on parts of the code while I focused on understanding the architecture, APIs, and user experience.
 
-### 1 — Backend
+Live Website
 
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python main.py
-# API runs on http://localhost:8000
-# Interactive docs: http://localhost:8000/docs
-```
+https://danielshawaa.github.io/cloud-comparison/
 
-### 2 — Frontend (separate terminal)
+Key Features
 
-```bash
-cd frontend
-npm install   # already done if you cloned this
-npm run dev
-# App runs on http://localhost:5173
-```
+• Browse 30+ AWS services across major cloud categories
+• Search AWS services by name, description, or features
+• Filter services by category (Compute, Storage, AI/ML, etc.)
+• View service descriptions, pricing models, and common use cases
+• Compare up to three services side-by-side
+• Responsive layout for desktop and mobile
 
-## API Endpoints
+Technologies Used
 
-| Method | Path                       | Description                              |
-|--------|----------------------------|------------------------------------------|
-| GET    | `/api/services`            | List all services (supports `?category=` and `?search=`) |
-| GET    | `/api/categories`          | List all category names                  |
-| GET    | `/api/services/{id}`       | Get a single service by ID               |
+Frontend
+React 18
+TypeScript
+Vite
+Tailwind CSS
 
-## Features
+Backend
+Python
+FastAPI
+Uvicorn
 
-- **33 AWS services** across Compute, Storage, Database, Networking, AI/ML, Security, Analytics, and DevOps
-- **Category filter** — click a pill to narrow results
-- **Live search** — debounced, searches name, description, features, and use cases
-- **Service cards** — category badge, pricing model badge, key features, use cases, and pricing notes
-- **Responsive grid** — 1 / 2 / 3 columns depending on screen width
-- **Side-by-side comparison** — select up to 3 services via the **+ Compare** button on each card; a sticky bar appears at the bottom and opens a full comparison table
+Deployment
+GitHub Pages
+GitHub Actions
 
-## Deployment (GitHub Pages)
+Project Architecture
 
-The frontend is a fully static app — no backend required at runtime.
+The application is structured as a typical full-stack project with a separate frontend and backend.
 
-### Automatic (GitHub Actions)
+Frontend
 
-1. Push the repository to GitHub.
-2. Go to **Settings → Pages** and set the source to **GitHub Actions**.
-3. Push any commit to `master` or `main` — the workflow in `.github/workflows/deploy.yml` will build and deploy automatically.
-4. Your site will be live at `https://<your-username>.github.io/<repo-name>/`.
+React application for UI and filtering logic
+Tailwind used for styling
+Vite used for fast builds and development
 
-### Manual
+Backend
 
-```bash
-cd frontend
-VITE_BASE_PATH=/<repo-name>/ npm run build
-# Upload the contents of frontend/dist/ to any static host
-```
+FastAPI service providing endpoints for AWS service data
+Lightweight REST API used by the frontend
 
----
+Deployment
 
+The frontend is deployed as a static site using GitHub Pages
+GitHub Actions automatically builds and deploys the site on push
+What I Learned
+
+Through this project I gained experience with:
+
+• Building REST APIs using FastAPI
+• Creating responsive React applications with TypeScript
+• Structuring frontend and backend projects
+• Deploying static web applications with GitHub Pages
+• Using AI-assisted development tools (Warp AI) to speed up iteration while still understanding the code and architecture
+
+Future Improvements
+
+• Add more AWS services and categories
+• Add diagrams explaining AWS service architecture
+• Add real pricing examples and comparisons
+• Improve UI/UX and filtering capabilities
+• Add authentication and user favorites
 Co-Authored-By: Oz <oz-agent@warp.dev>
